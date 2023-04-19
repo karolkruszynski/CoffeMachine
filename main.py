@@ -1,10 +1,12 @@
 import data
 import random
+INITIAL_MAIN = False
 
 def customer_input():
+    global INITIAL_MAIN
     customer_choice = input("What would you like? (espresso/latte/cappuccino): ").lower()
     if customer_choice == "off":
-        print("")
+        INITIAL_MAIN = True
     elif customer_choice == "report":
         for i in data.resources:
             if i == "coffee":
@@ -27,9 +29,6 @@ def resources_sufficient(customer_answer):
                 data.resources["water"] -= 50
                 data.resources["coffee"] -= 18
                 data.resources["money"] += 1.5
-                # print(data.resources["water"])
-                # print(data.resources["coffee"])
-                # print(data.resources["money"])
             else:
                 print("Sorry there is not enough coffee.")
                 is_resources = False
@@ -47,10 +46,6 @@ def resources_sufficient(customer_answer):
                     data.resources["milk"] -= 150
                     data.resources["coffee"] -= 24
                     data.resources["money"] += 2.5
-                    # print(data.resources["water"])
-                    # print(data.resources["milk"])
-                    # print(data.resources["coffee"])
-                    # print(data.resources["money"])
                 else:
                     print("Sorry there is not enough coffee.")
                     is_resources = False
@@ -71,10 +66,6 @@ def resources_sufficient(customer_answer):
                     data.resources["milk"] -= 100
                     data.resources["coffee"] -= 24
                     data.resources["money"] += 3.0
-                    # print(data.resources["water"])
-                    # print(data.resources["milk"])
-                    # print(data.resources["coffee"])
-                    # print(data.resources["money"])
                 else:
                     print("Sorry there is not enough coffee.")
                     is_resources = False
@@ -128,13 +119,13 @@ def process_order(customer_answer,is_resources):
             print(f"And this is yours change {return_for_customer}$")
 
     elif is_resources == False:
-        print("Sorry there is not enough resources")    #todo: Dodadanie komunikatu czego dokładnie brakuje np. water
+        print("Sorry there is not enough resources")
         print(f"This is yours change {sum_of_customer_money}")
 
-test = False
-while test == False:
-    customer_answer = customer_input()
-    resources_sufficient(customer_answer)
-    if is_resources == True:
-        process_order(customer_answer, is_resources)
 
+while INITIAL_MAIN == False:
+    customer_answer = customer_input()
+    if INITIAL_MAIN == False:
+        resources_sufficient(customer_answer)
+        if is_resources == True:
+            process_order(customer_answer, is_resources)
