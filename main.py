@@ -18,6 +18,7 @@ def customer_input():
 is_resources = False
 def resources_sufficient(customer_answer):
     global is_resources
+
     if customer_answer == "espresso":
         if data.resources["water"] > data.MENU["espresso"]["ingredients"]["water"]:
             if data.resources["coffee"] > data.MENU["espresso"]["ingredients"]["coffee"]:
@@ -30,9 +31,12 @@ def resources_sufficient(customer_answer):
                 # print(data.resources["coffee"])
                 # print(data.resources["money"])
             else:
-                    print("Sorry there is not enough coffee.")
+                print("Sorry there is not enough coffee.")
+                is_resources = False
         else:
             print("Sorry there is not enough water.")
+            is_resources = False
+
     if customer_answer == "latte":
         if data.resources["water"] > data.MENU["latte"]["ingredients"]["water"]:
             if data.resources["coffee"] > data.MENU["latte"]["ingredients"]["coffee"]:
@@ -48,11 +52,15 @@ def resources_sufficient(customer_answer):
                     # print(data.resources["coffee"])
                     # print(data.resources["money"])
                 else:
-                        print("Sorry there is not enough coffee.")
+                    print("Sorry there is not enough coffee.")
+                    is_resources = False
             else:
                 print("Sorry there is not enough milk.")
+                is_resources = False
         else:
             print("Sorry there is not enough water.")
+            is_resources = False
+
     if customer_answer == "cappuccino":
         if data.resources["water"] > data.MENU["cappuccino"]["ingredients"]["water"]:
             if data.resources["coffee"] > data.MENU["cappuccino"]["ingredients"]["coffee"]:
@@ -69,13 +77,16 @@ def resources_sufficient(customer_answer):
                     # print(data.resources["money"])
                 else:
                     print("Sorry there is not enough coffee.")
+                    is_resources = False
             else:
                 print("Sorry there is not enough milk.")
+                is_resources = False
         else:
             print("Sorry there is not enough water.")
+            is_resources = False
 
 
-def process_coins(customer_answer,is_resources):
+def process_order(customer_answer,is_resources):
     credits = 0.0
     print(f"Yours credits: {credits}$")
 
@@ -94,16 +105,36 @@ def process_coins(customer_answer,is_resources):
 
     sum_of_customer_money = (quarters*0.25)+(dimes*0.10)+(nickles*0.05)+(pennies*0.01)
     return_for_customer = 0.0
-    espresso_cost = data.MENU["espresso"]["cost"]   # coast jest jako float - do poprawy!
+    espresso_cost = data.MENU["espresso"]["cost"]
+    latte_cost = data.MENU["latte"]["cost"]
+    cappuccino_cost = data.MENU["cappuccino"]["cost"]
+
     if customer_answer == "espresso" and is_resources == True:
-        if sum_of_customer_money > data.MENU["espresso"]["cost"]:
+        if sum_of_customer_money >= espresso_cost:
             return_for_customer = round(sum_of_customer_money - espresso_cost,2)
             print(f"Please this is yours {customer_answer}.")
             print(f"And this is yours change {return_for_customer}$")
+
+    elif customer_answer == "latte" and is_resources == True:
+        if sum_of_customer_money >= latte_cost:
+            return_for_customer = round(sum_of_customer_money - latte_cost,2)
+            print(f"Please this is yours {customer_answer}.")
+            print(f"And this is yours change {return_for_customer}$")
+
+    elif customer_answer == "cappuccino" and is_resources == True:
+        if sum_of_customer_money >= cappuccino_cost:
+            return_for_customer = round(sum_of_customer_money - cappuccino_cost,2)
+            print(f"Please this is yours {customer_answer}.")
+            print(f"And this is yours change {return_for_customer}$")
+
+    elif is_resources == False:
+        print("Sorry there is not enough resources")    #todo: Dodadanie komunikatu czego dokładnie brakuje np. water
+        print(f"This is yours change {sum_of_customer_money}")
 
 test = False
 while test == False:
     customer_answer = customer_input()
     resources_sufficient(customer_answer)
-    process_coins(customer_answer, is_resources)
+    if is_resources == True:
+        process_order(customer_answer, is_resources)
 
